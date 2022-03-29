@@ -1,6 +1,7 @@
 export enum NftType {
   AVATAR = 'AVATAR',
   ACCESSORY = 'ACCESSORY',
+  GAME_ITEM = 'GAME_ITEM',
 }
 
 export enum NftStatus {

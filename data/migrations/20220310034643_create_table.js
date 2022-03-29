@@ -23,7 +23,7 @@ exports.up = async function (knex) {
                 .references('id').inTable(dbTables.nftCollections)
                 .onDelete('SET NULL');
 
-            table.enum('nft_type', [NftType.AVATAR, NftType.ACCESSORY]).notNullable();
+            table.enum('nft_type', [NftType.AVATAR, NftType.ACCESSORY, NftType.GAME_ITEM]).notNullable();
             table.enum('token_format', [TokenFormat.ERC721, TokenFormat.ERC1155]).notNullable();
 
             // tokenId: Number of the NFT in its collection

@@ -2,7 +2,7 @@
 import { validationResult } from 'express-validator';
 import { NextFunction, Request, Response } from 'express';
 import { ContextRunner } from 'express-validator/src/chain';
-import { ErrorCode } from '../constants';
+import { StatusCodes } from 'http-status-codes';
 
 /**
  * Uniform handling of express validators
@@ -18,7 +18,7 @@ export const Validator = {
       if (errors.isEmpty()) return next();
 
       res.status(400).json({
-        code: ErrorCode.BAD_REQUEST,
+        code: StatusCodes.BAD_REQUEST,
         errors: errors.array().map(({ param, msg }) => ({
           param,
           message: msg,

@@ -1,6 +1,8 @@
-const {NftStatus, NftType, TokenFormat, ListingStatus} = require("../../src/interfaces");
-const {dbTables} = require("../../src/constants");
-
+const dbTables = {
+    nftCollections: 'nft_collections',
+    nftItems: 'nft_items',
+    nftListings: 'nft_listings',
+};
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -13,7 +15,7 @@ exports.up = async function (knex) {
             table.string('name').notNullable();
             table.string('contract_address').notNullable().index();
 
-            table.timestamps();
+            table.timestamps(true, true);
         });
 
         await knex.schema.createTable(dbTables.nftItems, table => {
@@ -23,11 +25,11 @@ exports.up = async function (knex) {
                 .references('id').inTable(dbTables.nftCollections)
                 .onDelete('SET NULL');
 
-            table.enum('nft_type', [NftType.AVATAR, NftType.ACCESSORY, NftType.GAME_ITEM]).notNullable();
-            table.enum('token_format', [TokenFormat.ERC721, TokenFormat.ERC1155]).notNullable();
+            table.enum('nft_type', ['AVATAR', 'ACCESSORY', 'GAME_ITEM']).notNullable();
+            table.enum('token_format', ['ERC721', 'ERC1155']).notNullable();
 
             // tokenId: Number of the NFT in its collection
-            table.integer('token_id');
+            table.string('token_id').notNullable();
             table.text('image').nullable();
             table.text('image_data').nullable();
             table.text('external_url').nullable();
@@ -43,10 +45,10 @@ exports.up = async function (knex) {
             table.text('animation_url').nullable();
             table.text('youtube_url').nullable();
 
-            table.enum('status', [NftStatus.LISTED, NftStatus.SOLD, NftStatus.UNLISTED]).defaultTo('UNLISTED');
+            table.enum('status', ['LISTED', 'SOLD', 'UNLISTED']).defaultTo('UNLISTED');
             // Make combined unique; ensure unique token id per collection and also helps for fast querying
             table.unique(['collection_id', 'token_id']);
-            table.timestamps();
+            table.timestamps(true, true);
         });
 
         await knex.schema.createTable(dbTables.nftListings, table => {
@@ -57,8 +59,8 @@ exports.up = async function (knex) {
 
             table.double('price').notNullable();
             table.string('currency').notNullable();
-            table.enum('status', [ListingStatus.ACTIVE, ListingStatus.CLOSED, ListingStatus.SOLD]).notNullable();
-            table.timestamps();
+            table.enum('status', ['ACTIVE', 'CLOSED', 'SOLD']).notNullable();
+            table.timestamps(true, true);
         });
     } catch (e) {
         console.error(e);

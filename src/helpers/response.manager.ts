@@ -1,4 +1,7 @@
 import { Response } from 'express';
+import { Logger } from './Logger';
+import { StatusCodes } from 'http-status-codes';
+import { CustomError } from './custom.error';
 
 function respond(res: Response, data: any, httpCode: number): void {
   const response = {
@@ -26,4 +29,23 @@ export function failure(res: Response, response: any, httpCode: number = 503): v
   const data = response;
   data.error = true;
   respond(res, data, httpCode);
+}
+
+export function handleError(res: Response, err: any) {
+  Logger.Error(err);
+  let code = StatusCodes.INTERNAL_SERVER_ERROR;
+  let message = err.message || 'Internal Server Error Occurred';
+  if(err instanceof CustomError) {
+    code = err.code;
+    message = err.message;
+  }
+  // Postgres error code for non-null constraint violation
+  if(err.code === '23502') {
+    code = StatusCodes.BAD_REQUEST;
+    message = 'Some fields are missing';
+  }
+
+  return failure(res, {
+    message,
+  }, code);
 }

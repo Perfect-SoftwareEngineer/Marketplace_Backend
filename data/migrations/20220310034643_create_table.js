@@ -1,8 +1,5 @@
-const dbTables = {
-    nftCollections: 'nft_collections',
-    nftItems: 'nft_items',
-    nftListings: 'nft_listings',
-};
+const {dbTables} = require("./constants");
+
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -28,6 +25,7 @@ exports.up = async function (knex) {
             table.enum('nft_type', ['AVATAR', 'ACCESSORY', 'GAME_ITEM']).notNullable();
             table.enum('token_format', ['ERC721', 'ERC1155']).notNullable();
 
+            table.string('chain').notNullable();
             // tokenId: Number of the NFT in its collection
             table.string('token_id').notNullable();
             table.text('image').nullable();
@@ -45,7 +43,7 @@ exports.up = async function (knex) {
             table.text('animation_url').nullable();
             table.text('youtube_url').nullable();
 
-            table.enum('status', ['LISTED', 'SOLD', 'UNLISTED']).defaultTo('UNLISTED');
+            table.enum('status', ['LISTED', 'UNLISTED']).defaultTo('UNLISTED');
             // Make combined unique; ensure unique token id per collection and also helps for fast querying
             table.unique(['collection_id', 'token_id']);
             table.timestamps(true, true);
@@ -57,9 +55,14 @@ exports.up = async function (knex) {
                 .references('id').inTable(dbTables.nftItems)
                 .onDelete('CASCADE');
 
+            table.integer('quantity').defaultTo(1);
+            table.integer('quantity_sold').defaultTo(0); // needed?
+
             table.double('price').notNullable();
-            table.string('currency').notNullable();
-            table.enum('status', ['ACTIVE', 'CLOSED', 'SOLD']).notNullable();
+            table.string('currency').notNullable(); // For display’ sake
+            table.string('payment_token_address').notNullable();
+
+            table.enum('status', ['ACTIVE', 'CLOSED', 'SOLD_ALL']).notNullable();
             table.timestamps(true, true);
         });
     } catch (e) {

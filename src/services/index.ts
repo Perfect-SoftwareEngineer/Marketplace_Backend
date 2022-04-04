@@ -1,2 +1,2 @@
 // empty for now
-export {};
+export * from './metadata.service';

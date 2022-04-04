@@ -1,2 +1,1 @@
-// empty for now
-export {};
+export * from './metadata.controller';

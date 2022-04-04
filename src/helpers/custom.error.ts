@@ -1,6 +1,7 @@
 export class CustomError extends Error {
   code: number;
   data?: object;
+  name: string;
 
   constructor(code: number, message: string, data?: object) {
     super();
@@ -8,5 +9,6 @@ export class CustomError extends Error {
     this.code = code;
     this.message = message;
     this.data = data;
+    this.name = 'LunaCustomError';
   }
 }

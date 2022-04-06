@@ -13,9 +13,9 @@ const validateValueExists = (attributes: Attribute[]) => {
 
 export const addMetadataValidator = () => {
   return Validator.validate([
-    param('collectionId', 'max collectionId character length is 3 to 20')
+    param('collection_id', 'max collectionId character length is 3 to 20')
       .isLength({ min: 3, max: 20 }),
-    param('tokenId').isLength({ min: 1 }),
+    param('token_id').isLength({ min: 1 }),
     body('image', 'image url provided is not a valid url')
       .optional()
       .isURL()
@@ -60,25 +60,25 @@ export const addMetadataValidator = () => {
 
 export const getAllMetadataValidator = () => {
   return Validator.validate([
-    param('collectionId', 'max collectionId character length is 3 to 20')
+    param('collection_id', 'max collectionId character length is 3 to 20')
       .isLength({ min: 3, max: 20 }),
   ]);
 };
 
 export const singleMetadataValidator = () => {
   return Validator.validate([
-    param('collectionId', 'max collectionId character length is 3 to 20')
+    param('collection_id', 'max collectionId character length is 3 to 20')
       .isLength({ min: 3, max: 20 }),
-    param('tokenId', 'tokenId is required')
+    param('token_id', 'token_id is required')
       .exists(),
   ]);
 };
 
 export const updateMetadataValidator = () => {
   return Validator.validate([
-    param('collectionId', 'max collectionId character length is 3 to 20')
+    param('collection_id', 'max collectionId character length is 3 to 20')
       .isLength({ min: 3, max: 20 }),
-    param('tokenId', 'tokenId is required')
+    param('token_id', 'token_id is required')
       .exists(),
     body('image', 'image url provided is not a valid url')
       .optional()

@@ -46,7 +46,7 @@ module.exports = {
       'error',
       'always'
     ],
-    // 'camelcase': 'error',
+    'camelcase': 'error',
     'no-var': 'error'
   }
 };

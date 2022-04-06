@@ -22,7 +22,7 @@ const collectionRequestBody = {
 describe('Add Collection', () => {
 
   beforeEach(() => {
-    KnexHelper.getNftCollection = sinon.stub().withArgs(collectionId).returns([collectionData]);
+    KnexHelper.getNftCollection = sinon.stub().withArgs(collectionId).returns([]);
     KnexHelper.insertNftCollection = sinon.stub().withArgs(collectionRequestBody).returns(true);
   });
 

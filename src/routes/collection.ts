@@ -11,13 +11,13 @@ router.post('/', addCollectionValidator(), controller.handleAddCollection);
 router.get('/', controller.handleGetAllCollections);
 
 // Get a collection
-router.get('/:collectionId', controller.handleGetCollection);
+router.get('/:collection_id', controller.handleGetCollection);
 
 // Update info for a collection
-router.put('/:collectionId', updateCollectionValidator(), controller.handleUpdateCollectionInfo);
+router.put('/:collection_id', updateCollectionValidator(), controller.handleUpdateCollectionInfo);
 
 // Delete collection info
-router.delete('/:collectionId', controller.handleDeleteCollectionIfo);
+router.delete('/:collection_id', controller.handleDeleteCollectionIfo);
 
 
 export default router;

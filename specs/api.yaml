@@ -674,9 +674,8 @@ components:
         - $ref: '#/components/schemas/GenericResponse'
         - type: object
           properties:
-            public_address:
-              type: string
-              example: publicAddress
+            data:
+              $ref: '#/components/schemas/AdminData'
 
     AdminData:
       type: object
@@ -717,11 +716,16 @@ components:
           type: string
 
     AuthResponse:
-      type: object
-      properties:
-        token:
-          type: string
-        user:
-          oneOf:
-            - $ref: '#/components/schemas/AdminData'
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                user:
+                  oneOf:
+                    - $ref: '#/components/schemas/AdminData'
 

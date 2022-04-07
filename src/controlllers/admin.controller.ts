@@ -6,13 +6,11 @@ import { StatusCodes } from 'http-status-codes';
 export async function handleAddAdmin(req: Request, res: ExpressResponse): Promise<void> {
   try {
     const { public_address: publicAddress } = req.body;
-    const response = await adminService.addAdmin({ public_address: publicAddress });
+    const admin = await adminService.addAdmin({ public_address: publicAddress });
 
     return Response.success(res, {
       message: 'Successful',
-      response: {
-        public_address: publicAddress,
-      }
+      admin,
     }, StatusCodes.OK);
   } catch (err: any) {
     return Response.handleError(res, err);
@@ -38,13 +36,11 @@ export async function handleUpdateAdmin(req: Request, res: ExpressResponse): Pro
     const { public_address } = req.params;
     const { username } = req.body;
 
-    await adminService.updateAdmin({ public_address, username });
+    const admin = await adminService.updateAdmin({ public_address, username });
 
     return Response.success(res, {
       message: 'Successful',
-      response: {
-        public_address,
-      }
+      admin,
     }, StatusCodes.OK);
   } catch (err: any) {
     return Response.handleError(res, err);

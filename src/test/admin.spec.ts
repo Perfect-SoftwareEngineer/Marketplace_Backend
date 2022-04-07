@@ -18,13 +18,14 @@ const adminRequestBody = { public_address: publicAddress }
 describe('Add Admin', () => {
 
   beforeEach(() => {
-    KnexHelper.getAdmins = sinon.stub().withArgs(adminRequestBody).returns([]);
+    KnexHelper.getAdmins = sinon.stub().withArgs(adminRequestBody).returns([])
+      .onSecondCall().returns([adminData]);
     KnexHelper.insertAdmin = sinon.stub().withArgs(adminRequestBody).returns(true);
   });
 
-  it('should add a collection', async () => {
+  it('should add an admin', async () => {
     const res = await adminService.addAdmin(adminRequestBody);
-    expect(res).toEqual(true);
+    expect(res.public_address).toEqual(publicAddress);
   });
 });
 
@@ -59,12 +60,12 @@ describe('Update an Admin', () => {
     }).returns(true);
   });
 
-  it('should collection details', async () => {
+  it('should update admin', async () => {
     // @ts-ignore
     const res = await adminService.updateAdmin(publicAddress, {
       username: 'Hashcode',
     });
-    expect(res).toEqual(true);
+    expect(res.public_address).toEqual(publicAddress);
   });
 
 });

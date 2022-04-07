@@ -6,13 +6,11 @@ import { StatusCodes } from 'http-status-codes';
 export async function handleAddUser(req: Request, res: ExpressResponse): Promise<void> {
   try {
     const { publicAddress } = req.body;
-    const response = await userService.addUser({ public_address: publicAddress });
+    const user = await userService.addUser({ public_address: publicAddress });
 
     return Response.success(res, {
       message: 'Successful',
-      response: {
-        tokenId: response,
-      }
+      user,
     }, StatusCodes.OK);
   } catch (err: any) {
     return Response.handleError(res, err);
@@ -22,11 +20,11 @@ export async function handleAddUser(req: Request, res: ExpressResponse): Promise
 export async function handleGetUsers(req: Request, res: ExpressResponse): Promise<void> {
   try {
     const { publicAddress } = req.query;
-    const response = await userService.getUsers({ public_address: publicAddress?.toString() });
+    const users = await userService.getUsers({ public_address: publicAddress?.toString() });
 
     return Response.success(res, {
       message: 'Successful',
-      response
+      users,
     }, StatusCodes.OK);
   } catch (err: any) {
     return Response.handleError(res, err);
@@ -38,13 +36,11 @@ export async function handleUpdateUser(req: Request, res: ExpressResponse): Prom
     const { publicAddress } = req.params;
     const { username } = req.body;
 
-    await userService.updateUser({ public_address: publicAddress, username });
+    const user = await userService.updateUser({ public_address: publicAddress, username });
 
     return Response.success(res, {
       message: 'Successful',
-      response: {
-        publicAddress,
-      }
+      user,
     }, StatusCodes.OK);
   } catch (err: any) {
     return Response.handleError(res, err);

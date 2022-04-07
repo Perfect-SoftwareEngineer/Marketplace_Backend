@@ -121,6 +121,10 @@ export class KnexHelper {
   }
 
   static async updateUser(public_address: string, body: UpdateDbUserRequest): Promise<boolean> {
+    // Always have a new Nonce
+    if (!body.nonce) {
+      body.nonce = Math.floor(Math.random() * 1000000);
+    }
     const result = await knex(dbTables.users)
       .where({ public_address })
       .update(body);
@@ -141,6 +145,10 @@ export class KnexHelper {
   }
 
   static async updateAdmin(public_address: string, body: UpdateDbAdminRequest): Promise<boolean> {
+    // Always have a new Nonce
+    if (!body.nonce) {
+      body.nonce = Math.floor(Math.random() * 1000000);
+    }
     const result = await knex(dbTables.admins)
       .where({ public_address })
       .update(body);

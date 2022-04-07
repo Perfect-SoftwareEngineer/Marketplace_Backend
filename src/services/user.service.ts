@@ -4,12 +4,14 @@ import { CustomError } from '../helpers';
 import { StatusCodes } from 'http-status-codes';
 import { GetUserRequest, SaveUserRequest, UpdateUserRequest, User } from '../interfaces/user';
 
-export async function addUser(request: SaveUserRequest): Promise<boolean> {
+export async function addUser(request: SaveUserRequest): Promise<User> {
   const result = await KnexHelper.getUsers({ public_address: request.public_address });
   if (result.length !== 0) {
     throw new CustomError(StatusCodes.BAD_REQUEST, 'User already exists');
   }
-  return await KnexHelper.insertUser(request);
+  await KnexHelper.insertUser(request);
+  return (await getUsers({ public_address: request.public_address }))[0];
+
 }
 
 export async function getUsers(request: GetUserRequest): Promise<User[]> {
@@ -21,10 +23,10 @@ export async function getUsers(request: GetUserRequest): Promise<User[]> {
   return result;
 }
 
-export async function updateUser(request: UpdateUserRequest): Promise<boolean> {
+export async function updateUser(request: UpdateUserRequest): Promise<User> {
   Logger.Info('Running user update process', request);
   await getUsers({ public_address: request.public_address });
   const response = await KnexHelper.updateUser(request.public_address, { username: request.username });
   Logger.Info(response);
-  return true;
+  return (await getUsers({ public_address: request.public_address }))[0];
 }

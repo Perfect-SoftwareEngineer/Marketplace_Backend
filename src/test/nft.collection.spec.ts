@@ -11,7 +11,7 @@ const collectionData = {
   id: collectionId,
   name: 'Luna Game 3d',
   contract_address: 'contractAddress',
-}
+};
 
 const collectionRequestBody = {
   id: collectionId,

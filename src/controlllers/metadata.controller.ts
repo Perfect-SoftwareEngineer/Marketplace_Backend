@@ -12,14 +12,14 @@ import { StatusCodes } from 'http-status-codes';
  */
 export async function handleAddMetadata(req: Request, res: ExpressResponse): Promise<void> {
   // tokenId in the case we want to add metadata for a deleted tokenId
-  const { collectionId, tokenId } = req.params;
+  const { collection_id: collectionId, token_id: tokenId } = req.params;
   try {
     const response = await metadataService.addItem({ collectionId, tokenId: tokenId, metadata: req.body });
 
     return Response.success(res, {
       message: 'Successful',
       response: {
-        tokenId: response,
+        token_id: response,
       }
     }, StatusCodes.OK);
   } catch (err: any) {
@@ -36,7 +36,7 @@ export async function handleAddMetadata(req: Request, res: ExpressResponse): Pro
 export async function handleGetAllMetadata(req: Request, res: ExpressResponse): Promise<void> {
   Logger.Info(req.params);
   try {
-    const { collectionId } = req.params;
+    const { collection_id: collectionId } = req.params;
     const response = await metadataService.getAllItems(collectionId);
 
     return Response.success(res, {
@@ -51,7 +51,7 @@ export async function handleGetAllMetadata(req: Request, res: ExpressResponse): 
 export async function handleGetMetadata(req: Request, res: ExpressResponse): Promise<void> {
   Logger.Info(req.params);
   try {
-    const { collectionId, tokenId } = req.params;
+    const { collection_id: collectionId, token_id: tokenId } = req.params;
     const response = await metadataService.getSingleItem({ collectionId, tokenId });
 
     return Response.success(res, {
@@ -72,7 +72,7 @@ export async function handleUpdateMetadata(req: Request, res: ExpressResponse): 
     return Response.success(res, {
       message: 'Successful',
       response: {
-        tokenId: Number.parseInt(tokenId),
+        token_id: tokenId,
       }
     }, StatusCodes.OK);
   } catch (err: any) {

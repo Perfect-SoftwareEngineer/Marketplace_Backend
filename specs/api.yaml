@@ -1,0 +1,731 @@
+openapi: 3.0.0
+info:
+  title: luna-marketplace
+  version: 1.0.0
+servers:
+  - url: https://{{baseurl}}
+tags:
+  - name: collection
+  - name: nft
+  - name: admin
+  - name: auth
+
+paths:
+  /collections:
+    post:
+      tags:
+        - collection
+      summary: Add NFT Collection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNftCollectionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddCollectionInfoResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 400
+                message: Collection already exists
+    get:
+      tags:
+        - collection
+      summary: Get All NFT Collection Infos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCollectionInfosResponse'
+
+  /collections/{collection_id}:
+    parameters:
+      - name: collection_id
+        in: path
+        schema:
+          type: string
+        required: true
+    get:
+      tags:
+        - collection
+      summary: Get NFT Collection By ID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCollectionInfoResponse'
+    delete:
+      tags:
+        - collection
+      summary: Delete NFT Collection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCollectionInfoResponse'
+    put:
+      tags:
+        - collection
+      summary: Update NFT Collection By ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNftCollectionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddCollectionInfoResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Collection was not found
+
+  /nft/{collection_id}/metadata/{token_id}:
+    parameters:
+      - name: collection_id
+        in: path
+        schema:
+          type: string
+        required: true
+      - name: token_id
+        in: path
+        schema:
+          type: string
+        required: true
+    post:
+      tags:
+        - nft
+      summary: Add Metadata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTokenRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTokenResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 403
+                message: Token must have been deleted before you can insert
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Collection with id luna-shoes not created yet.
+    put:
+      tags:
+        - nft
+      summary: Update Metadata for token ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTokenRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTokenResponse'
+    get:
+      tags:
+        - nft
+      summary: Get Metadata by token id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNftResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Token metadata was not found
+    delete:
+      tags:
+        - nft
+      summary: Delete Metadata by collection id and token id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteNftResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Token metadata was not found
+  /nft/{collection_id}/metadata:
+    get:
+      tags:
+        - nft
+      summary: Get All Metadata
+      parameters:
+        - name: collection_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllNftsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Token metadata was not found
+    delete:
+      tags:
+        - nft
+      summary: Delete All Metadata
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteNftResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Token metadata was not found
+
+  /admin:
+    post:
+      tags:
+        - admin
+      summary: Signup Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpAdminRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpAdminResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 403
+                message: Public address not accepted to be an admin
+    get:
+      tags:
+        - admin
+      summary: Get Admin
+      operationId: GetAdmins
+      parameters:
+        - name: public_address
+          in: query
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAdminsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 404
+                message: Token metadata was not found
+
+  /admin/{public_address}:
+    parameters:
+      - name: public_address
+        in: path
+        schema:
+          type: string
+        required: true
+    put:
+      tags:
+        - admin
+      summary: Update Admin username
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAdminRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpAdminResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 403
+                message: Public address not accepted to be an admin
+
+  /auth/{user_type}:
+    parameters:
+      - name: user_type
+        in: path
+        schema:
+          type: string
+          enum:
+            - admin
+        required: true
+    post:
+      tags:
+        - auth
+      summary: Sign in admin
+      description: |
+        1. Get the user Nonce by making an API request to get the user.
+        2. Compose the string as follows: `Luna MarketPlace user one-time Nonce: ${user.nonce}`
+        3. Let the user sign this with their wallet.
+        4. Send public_address and signature in request
+
+        N.B this will also be used to sign in users when we add user CRUD to this doc.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                error: true
+                code: 403
+                message: Public address not accepted to be an admin
+components:
+  schemas:
+    GenericResponse:
+      properties:
+        error:
+          type: boolean
+          example: false
+        code:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Successful
+
+    AddNftCollectionRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        contract_address:
+          type: string
+      example:
+        id: luna_game_3d
+        name: Luna Game 3d
+        contract_address: contractAddress
+
+    CollectionInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        contract_address:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      example:
+        id: luna_game_3d
+        name: Luna Game 3d
+        contract_address: contractAddress
+        created_at: '2022-03-31T22:44:12.760Z'
+        updated_at: '2022-03-31T22:44:12.760Z'
+
+    GetCollectionInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CollectionInfo'
+
+    GetAllCollectionInfosResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CollectionInfo'
+
+    DeleteCollectionInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              example:
+                deleted: 1
+              properties:
+                deleted:
+                  type: number
+
+    AddCollectionInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              example:
+                collection_id: 'luna_game_3d'
+              properties:
+                collection_id:
+                  type: string
+
+    UpdateNftCollectionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        contract_address:
+          type: string
+      example:
+        name: Luna Game 3d
+        contract_address: contractAddress
+
+    NftType:
+      type: string
+      enum:
+        - AVATAR
+        - ACCESSORY
+        - GAME_ITEM
+
+    TokenFormat:
+      type: string
+      enum:
+        - ERC721
+        - ERC1155
+
+    NftAttribute:
+      type: object
+      properties:
+        trait_type:
+          type: string
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+
+    AddTokenRequest:
+      type: object
+      properties:
+        description:
+          type: string
+        external_url:
+          type: string
+        chain:
+          type: string
+        image:
+          type: string
+        image_data:
+          required: false
+          type: string
+        name:
+          type: string
+        background_color:
+          type: string
+        nft_type:
+          $ref: '#/components/schemas/NftType'
+        token_format:
+          $ref: '#/components/schemas/TokenFormat'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NftAttribute'
+        animation_url:
+          type: string
+        youtube_url:
+          type: string
+      example:
+        description: Friendly OpenSea Creature that enjoys long swims in the ocean.
+        external_url: https://openseacreatures.io/3
+        image: >-
+          https://storage.googleapis.com/opensea-prod.appspot.com/puffs/3.png
+        name: Dave Starbelly
+        namer: Dave Starbelly
+        background_color: abc
+        nft_type: AVATAR
+        token_format: ERC721
+        attributes:
+          - trait_type: Base
+            value: Starfish
+          - trait_type: Eyes
+            value: Big
+          - trait_type: Mouth
+            value: Surprised
+          - trait_type: Level
+            value: 5
+          - trait_type: Stamina
+            value: 1.4
+          - trait_type: Personality
+            value: Sad
+          - display_type: boost_number
+            trait_type: Aqua Power
+            value: 40
+          - display_type: boost_percentage
+            trait_type: Stamina Increase
+            value: 10
+          - display_type: number
+            trait_type: Generation
+            value: 2
+        animation_url: https://openseacreatures.io/3
+        youtube_url: https://www.youtube.com/watch?v=qt1equGhkQE
+
+    NftItem:
+      type: object
+      properties:
+        collection:
+          type: string
+        chain:
+          type: string
+        description:
+          type: string
+        external_url:
+          type: string
+        image:
+          type: string
+        image_data:
+          type: string
+        name:
+          type: string
+        background_color:
+          type: string
+        token_id:
+          type: string
+        owner_address:
+          type: string
+        nft_type:
+          $ref: '#/components/schemas/NftType'
+        token_format:
+          $ref: '#/components/schemas/TokenFormat'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NftAttribute'
+        animation_url:
+          type: string
+        youtube_url:
+          type: string
+
+    AddTokenResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              example:
+                collection_id: '043'
+              properties:
+                token_id:
+                  type: string
+
+    GetNftResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/NftItem'
+
+    DeleteNftResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                deleted:
+                  type: integer
+                  example: 1
+
+    GetAllNftsResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/NftItem'
+
+    SignUpAdminRequest:
+      type: object
+      properties:
+        public_address:
+          type: string
+
+    SignUpAdminResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AdminData'
+
+    AdminData:
+      type: object
+      properties:
+        public_address:
+          type: string
+        username:
+          type: string
+        nonce:
+          type: number
+      example:
+        public_address: publicAddress
+        username: lekky
+        nonce: 345056
+
+    GetAdminsResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdminData'
+
+    UpdateAdminRequest:
+      type: object
+      properties:
+        username:
+          type: string
+
+    AuthRequest:
+      type: object
+      properties:
+        public_address:
+          type: string
+        signature:
+          type: string
+
+    AuthResponse:
+      allOf:
+        - $ref: '#/components/schemas/GenericResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                user:
+                  oneOf:
+                    - $ref: '#/components/schemas/AdminData'
+

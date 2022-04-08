@@ -10,24 +10,24 @@ import { sanitizeAddMetadataBody } from '../middlewares';
 
 const router = express.Router();
 
-const ENDPOINT = '/:collectionId/metadata';
+const ENDPOINT = '/:collection_id/metadata';
 
 // Add metadata
-router.post([ENDPOINT, `${ENDPOINT}/:tokenId`], sanitizeAddMetadataBody, addMetadataValidator(), controller.handleAddMetadata);
+router.post([ENDPOINT, `${ENDPOINT}/:token_id`], sanitizeAddMetadataBody, addMetadataValidator(), controller.handleAddMetadata);
 
 // Get all metadata for a collection
 router.get(ENDPOINT, getAllMetadataValidator(), controller.handleGetAllMetadata);
 
 // Get metadata for a collection item
-router.get(`${ENDPOINT}/:tokenId`, singleMetadataValidator(), controller.handleGetMetadata);
+router.get(`${ENDPOINT}/:token_id`, singleMetadataValidator(), controller.handleGetMetadata);
 
 // Update metadata for a collection item
-router.put(`${ENDPOINT}/:tokenId`, sanitizeAddMetadataBody, updateMetadataValidator(), controller.handleUpdateMetadata);
+router.put(`${ENDPOINT}/:token_id`, sanitizeAddMetadataBody, updateMetadataValidator(), controller.handleUpdateMetadata);
 
 // Delete metadata for all items for a collection
 router.delete(ENDPOINT, controller.handleDeleteMetadata);
 
 // Delete metadata for a collection item
-router.delete(`${ENDPOINT}/:tokenId`, singleMetadataValidator(), controller.handleDeleteMetadata);
+router.delete(`${ENDPOINT}/:token_id`, singleMetadataValidator(), controller.handleDeleteMetadata);
 
 export default router;

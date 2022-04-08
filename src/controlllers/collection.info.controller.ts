@@ -12,13 +12,13 @@ import { StatusCodes } from 'http-status-codes';
  */
 export async function handleAddCollection(req: Request, res: ExpressResponse): Promise<void> {
   try {
-    const { id, name, contract_address } = req.body;
-    const response = await collectionService.addCollectionInfo({id, name, contractAddress: contract_address});
+    const { id, name, contract_address: contractAddress } = req.body;
+    await collectionService.addCollectionInfo({id, name, contractAddress });
 
     return Response.success(res, {
       message: 'Successful',
       response: {
-        tokenId: response,
+        collection_id: id,
       }
     }, StatusCodes.OK);
   } catch (err: any) {
@@ -63,7 +63,7 @@ export async function handleUpdateCollectionInfo(req: Request, res: ExpressRespo
     return Response.success(res, {
       message: 'Successful',
       response: {
-        collectionId: Number.parseInt(collectionId),
+        collection_id: collectionId,
       }
     }, StatusCodes.OK);
   } catch (err: any) {

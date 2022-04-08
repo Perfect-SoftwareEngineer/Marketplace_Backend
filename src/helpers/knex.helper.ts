@@ -4,6 +4,8 @@ import { GetItemRequest } from '../interfaces/get.item.request';
 import { dbTables } from '../constants';
 import { NftCollection, UpdateCollectionRequest } from '../interfaces/nft.collection';
 import { TokenExistsError } from '../interfaces';
+import { GetUserRequest, SaveUserRequest, UpdateDbUserRequest, User } from '../interfaces/user';
+import { Admin, GetAdminRequest, SaveAdminRequest, UpdateDbAdminRequest } from '../interfaces/admin';
 
 const knex = require('../../data/db');
 
@@ -103,5 +105,53 @@ export class KnexHelper {
       throw new TokenExistsError();
     }
     return knex(dbTables.nftCollections).where({ id }).del();
+  }
+
+  /*
+  * Users CRUD
+  * */
+  static async insertUser(user: SaveUserRequest): Promise<boolean> {
+    await knex(dbTables.users).insert(user);
+    return true;
+  }
+
+  static async getUsers(request: GetUserRequest): Promise<User[]> {
+    const result = await knex(dbTables.users).select().where(request);
+    return result as User[];
+  }
+
+  static async updateUser(public_address: string, body: UpdateDbUserRequest): Promise<boolean> {
+    // Always have a new Nonce
+    if (!body.nonce) {
+      body.nonce = Math.floor(Math.random() * 1000000);
+    }
+    const result = await knex(dbTables.users)
+      .where({ public_address })
+      .update(body);
+    return true;
+  }
+
+  /*
+  * Admins CRUD
+  * */
+  static async insertAdmin(admin: SaveAdminRequest): Promise<boolean> {
+    await knex(dbTables.admins).insert(admin);
+    return true;
+  }
+
+  static async getAdmins(request: GetAdminRequest): Promise<Admin[]> {
+    const result = await knex(dbTables.admins).select().where(request);
+    return result as Admin[];
+  }
+
+  static async updateAdmin(public_address: string, body: UpdateDbAdminRequest): Promise<boolean> {
+    // Always have a new Nonce
+    if (!body.nonce) {
+      body.nonce = Math.floor(Math.random() * 1000000);
+    }
+    const result = await knex(dbTables.admins)
+      .where({ public_address })
+      .update(body);
+    return true;
   }
 }

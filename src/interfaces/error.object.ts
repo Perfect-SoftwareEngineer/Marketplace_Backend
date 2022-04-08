@@ -10,3 +10,9 @@ export class TokenExistsError extends Error {
     super("Cannot delete collection from db, still has tokens in the db");
   }
 }
+
+export class InvalidSignatureError extends Error {
+  constructor() {
+    super("Invalid signature");
+  }
+}

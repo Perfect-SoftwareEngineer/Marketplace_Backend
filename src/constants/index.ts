@@ -8,3 +8,6 @@ export const dbTables = {
 };
 export const ADMIN_ADDRESSES: string[] = []; // Fill up with permitted admin wallet addresses
 export const JWT_PUBLIC_KEY = <string> process.env.JWT_PUBLIC_KEY;
+export const nftTypes = ['AVATAR', 'ACCESSORY', 'GAME_ITEM'];
+export const tokenFormats = ['ERC721', 'ERC1155'];
+export const nftStatus = ['LISTED', 'UNLISTED'];

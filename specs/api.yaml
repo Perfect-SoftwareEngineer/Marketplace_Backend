@@ -223,6 +223,34 @@ paths:
           schema:
             type: string
           required: true
+        - name: nft_type
+          in: query
+          schema:
+            type: NftType
+          required: false
+        - name: token_format
+          in: query
+          schema:
+            type: TokenFormat
+          required: false
+        - name: chain
+          description: blockchain of the NFT, we currently support ethereum and polygon
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: status
+          in: query
+          schema:
+            type: NftStatus
+          required: false
+        - name: attributes
+          in: query
+          description: stringified array of attributes for filtering
+          example: '[{"trait_type":"Eyes","value":"Big"}]'
+          schema:
+            type: string
+          required: false
       responses:
         '200':
           description: OK
@@ -502,6 +530,12 @@ components:
         - ACCESSORY
         - GAME_ITEM
 
+    NftStatus:
+      type: string
+      enum:
+        - LISTED
+        - UNLISTED
+
     TokenFormat:
       type: string
       enum:
@@ -587,7 +621,7 @@ components:
     NftItem:
       type: object
       properties:
-        collection:
+        collection_id:
           type: string
         chain:
           type: string
@@ -659,9 +693,37 @@ components:
         - type: object
           properties:
             data:
-              type: array
-              items:
-                $ref: '#/components/schemas/NftItem'
+              type: object
+              properties:
+                "items":
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NftItem'
+                pagination:
+                  $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          description: First page is page 1, default size if not specified is 50.
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        last_page:
+          description: Last possible page
+          type: integer
+          format: int32
+        total_count:
+          type: integer
+          format: int32
+      example:
+        page: 1
+        size: 50
+        last_page: 5
+        total_count: 241
 
     SignUpAdminRequest:
       type: object

@@ -71,7 +71,7 @@ export class JwtHelper {
    * @param roleType - role that is authorized to call the endpoint.
    * We can later extend this for Admin permissions
    */
-  requirePermission(roleType: RoleType) {
+  requirePermission(roleType: RoleType): (req: IExpressRequest, res: Response, next: Function) => Promise<any> {
     return async (req: IExpressRequest, res: Response, next: Function) => {
       const token = req.headers['x-auth-token'];
       if (!token) {

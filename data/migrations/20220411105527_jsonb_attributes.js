@@ -5,6 +5,7 @@ const { dbTables } = require('../constants');
  */
 exports.up = async function(knex) {
   await knex.schema.alterTable(dbTables.nftItems, table => {
+    table.string('gltf_url').nullable();
     table.jsonb('attributes').alter();
   });
 };
@@ -15,6 +16,7 @@ exports.up = async function(knex) {
  */
 exports.down = async function(knex) {
   await knex.schema.alterTable(dbTables.nftItems, table => {
+    table.dropColumn('gltf_url');
     table.json('attributes').alter();
   });
 };

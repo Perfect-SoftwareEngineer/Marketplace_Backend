@@ -583,6 +583,8 @@ components:
           type: string
         youtube_url:
           type: string
+        gltf_url:
+          type: string
       example:
         description: Friendly OpenSea Creature that enjoys long swims in the ocean.
         external_url: https://openseacreatures.io/3
@@ -617,6 +619,7 @@ components:
             value: 2
         animation_url: https://openseacreatures.io/3
         youtube_url: https://www.youtube.com/watch?v=qt1equGhkQE
+        gltf_url: https://www.youtube.com/watch?v=qt1equGhkQE
 
     NftItem:
       type: object
@@ -652,6 +655,8 @@ components:
         animation_url:
           type: string
         youtube_url:
+          type: string
+        gltf_url:
           type: string
 
     AddTokenResponse:

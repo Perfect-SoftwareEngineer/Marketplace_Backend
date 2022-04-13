@@ -8,7 +8,7 @@ module.exports.dbTables = {
 
 module.exports.testMetadata = {
     'description': 'Friendly OpenSea Creature that enjoys long swims in the ocean.',
-    'gltf_url': 'https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf',
+    'meta_3d_url': 'https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf',
     'external_url': 'https://openseacreatures.io/3',
     'image': 'https://storage.googleapis.com/opensea-prod.appspot.com/puffs/3.png',
     'name': 'Dave Starbelly',

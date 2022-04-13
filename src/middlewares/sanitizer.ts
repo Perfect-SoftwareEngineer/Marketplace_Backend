@@ -15,11 +15,11 @@ class MetaClass implements Metadata {
   nft_type: string;
   token_format: string;
   chain: string;
-  gltf_url: string;
+  meta_3d_url: string;
 
   constructor(attributes: any, description: string, name: string, animation_url: string, background_color:
     string, external_url: string, image: string, image_data: string, youtube_url: string, owner_address: string,
-              nft_type: string, token_format: string, chain: string, gltf_url: string) {
+              nft_type: string, token_format: string, chain: string, meta_3d_url: string) {
     this.attributes = attributes;
     this.description = description;
     this.name = name;
@@ -33,7 +33,7 @@ class MetaClass implements Metadata {
     this.nft_type = nft_type;
     this.token_format = token_format;
     this.chain = chain;
-    this.gltf_url = gltf_url;
+    this.meta_3d_url = meta_3d_url;
   }
 }
 export async function sanitizeAddMetadataBody(req: Request, res: Response, next: NextFunction) {

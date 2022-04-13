@@ -12,7 +12,7 @@ export interface Metadata {
   youtube_url?: string;
   chain: string;
   token_format?: string;
-  gltf_url?: string;
+  meta_3d_url?: string;
 }
 
 export interface Attribute {
@@ -85,5 +85,5 @@ export interface NftItem {
   background_color?: string;
   animation_url?: string;
   youtube_url?: string;
-  gltf_url?: string;
+  meta_3d_url?: string;
 }

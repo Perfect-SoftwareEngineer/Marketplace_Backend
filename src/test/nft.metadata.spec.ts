@@ -1,13 +1,25 @@
 import { KnexHelper } from '../helpers/knex.helper';
 import sinon from 'sinon';
-import { createRequestBody, updateRequestBody } from './data/nft.data';
+import request from 'supertest';
+
+import { createRequestBody, getAllNftItems, itemPagination, updateRequestBody } from './data/nft.data';
 import * as metadataService from '../services';
 import { CustomError } from '../helpers';
 import { StatusCodes } from 'http-status-codes';
+import { FetchTokenRequest } from '../interfaces/nft';
+import { NftStatus, NftType } from '../interfaces';
+import app from '../app';
 
 
 const collectionId = 'luna_game_3d';
 const tokenId = '1';
+
+const fetchTokenRequest: FetchTokenRequest = {
+  fetchFilter: { collection_id: collectionId, nft_type: NftType.AVATAR, status: NftStatus.UNLISTED },
+  attributes: [{ trait_type: 'Eyes', value: 'Big' }],
+  page: 1,
+  size: 50,
+};
 
 describe('Add NFTs', () => {
 
@@ -29,17 +41,11 @@ describe('Get NFTs', () => {
 
   beforeEach(() => {
     KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([createRequestBody]);
-    KnexHelper.getAllMetadata = sinon.stub().withArgs({ collectionId }).returns([createRequestBody]);
   });
 
   it('should return a token', async () => {
     const res = await metadataService.getSingleItem({ collectionId, tokenId });
     expect(res).toEqual(createRequestBody);
-  });
-
-  it('should return a token', async () => {
-    const res = await metadataService.getAllItems(collectionId);
-    expect(res).toEqual([createRequestBody]);
   });
 
 });
@@ -85,4 +91,25 @@ describe('Delete an NFT', () => {
       expect((e as CustomError).code).toEqual(StatusCodes.NOT_FOUND);
     }
   });
+});
+
+describe('Get all  metadata', () => {
+
+  beforeEach(() => {
+    KnexHelper.getAllNfts = sinon.stub().withArgs(fetchTokenRequest).returns({
+      items: getAllNftItems,
+      pagination: itemPagination,
+    });
+  });
+
+  const metaUrl = `/nft/${collectionId}/metadata`;
+
+  it(`GET ${metaUrl} - Should return 200`, async () => {
+    await request(app)
+      .get(metaUrl)
+      .then((res: any) => {
+        expect(res.body.data.items[0].token_id).toEqual('001');
+      });
+  });
+
 });

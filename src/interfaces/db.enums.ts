@@ -6,7 +6,6 @@ export enum NftType {
 
 export enum NftStatus {
   LISTED = 'LISTED',
-  SOLD = 'SOLD',
   UNLISTED = 'UNLISTED',
 }
 

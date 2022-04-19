@@ -3,6 +3,7 @@ import * as Response from '../helpers/response.manager';
 import { Logger } from '../helpers/Logger';
 import * as metadataService from '../services';
 import { StatusCodes } from 'http-status-codes';
+import { getAllItems } from '../services';
 
 /**
  * Save new metadata
@@ -37,7 +38,7 @@ export async function handleGetAllMetadata(req: Request, res: ExpressResponse): 
   Logger.Info(req.params);
   try {
     const { collection_id: collectionId } = req.params;
-    const response = await metadataService.getAllItems(collectionId);
+    const response = await metadataService.getAllItems(req);
 
     return Response.success(res, {
       message: 'Successful',

@@ -21,3 +21,5 @@ yarn-error.log*
 yarn.lock
 
 tsconfig.tsbuildinfo
+test_staging_deploy.sh
+private_key.pem

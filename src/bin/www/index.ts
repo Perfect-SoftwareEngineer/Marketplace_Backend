@@ -9,9 +9,8 @@ app.use(errorHandler());
 
 (async () => {
   // Initialize server
-  const server = app.listen(process.env.PORT || 8000, () => {
-    const port = app.get('port');
-
+  const port = Number.parseInt(process.env.PORT || '8000');
+  const server = app.listen(port, () => {
     Logger.Info(`API Started on port: ${port}`);
     Logger.Info('Press CTRL+C to stop\n');
   });

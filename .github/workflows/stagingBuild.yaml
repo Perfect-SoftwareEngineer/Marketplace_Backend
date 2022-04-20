@@ -1,0 +1,65 @@
+name: CI/CD deloy staging to EC2 Instance
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  #First we will see the application build or not , then we will deploy in EC2
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Run build for both Node version 12 and version 14
+        node-version: [ 14.8.1 ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # installing Node
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          # this is regarding the matrix strategy specified above
+          node-version: ${{ matrix.node-version }}
+      # install dependencies
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test
+      - run: npm run lint
+
+  Deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy in EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.HOSTNAME }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
+          echo "Uploading files to EC2..."
+          echo "Compressing dist folder..."
+          tar -czf build.tar.gz -C dist .
+          # Copy files to the server, save in a temp folder
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@18.223.21.101 'mkdir /home/ubuntu/marketplace-staging-temp'
+          scp -i private_key.pem -r specs ubuntu@18.223.21.101:/home/ubuntu/marketplace-staging-temp/specs
+          scp -i private_key.pem build.tar.gz package.json package-lock.json staging_run_script.sh ubuntu@18.223.21.101:/home/ubuntu/marketplace-staging-temp
+          echo "Removing local dist tar file..."
+          rm build.tar.gz
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@18.223.21.101 '
+            echo "Deploying to EC2"
+            tar -xzf /home/ubuntu/marketplace-staging-temp/build.tar.gz -C /home/ubuntu/marketplace-staging-temp
+            chmod +x /home/ubuntu/marketplace-staging-temp/staging_run_script.sh
+            cd /home/ubuntu/
+            pm2 stop marketplace_app
+            rm -r marketplace-staging
+            mv marketplace-staging-temp marketplace-staging
+            cd marketplace-staging/
+            rm build.tar.gz
+            # Server will be started manually
+          '

@@ -97,4 +97,8 @@ export interface NftItem {
   animation_url?: string;
   youtube_url?: string;
   meta_3d_url?: string;
+  contract_address: string;
+  token_hash?: string;
+  token_uri?: string;
+  amount?: string;
 }

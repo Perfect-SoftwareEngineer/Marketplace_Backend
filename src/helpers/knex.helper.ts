@@ -9,7 +9,7 @@ import {
 import { Logger } from './Logger';
 import { GetItemRequest } from '../interfaces/get.item.request';
 import { dbTables } from '../constants';
-import { NftCollection, UpdateCollectionRequest } from '../interfaces/nft.collection';
+import { NftCollection, NftCollectionDbReq, UpdateCollectionRequest } from '../interfaces/nft.collection';
 import { TokenExistsError } from '../interfaces';
 import { GetUserRequest, SaveUserRequest, UpdateDbUserRequest, User } from '../interfaces/user';
 import { Admin, GetAdminRequest, SaveAdminRequest, UpdateDbAdminRequest } from '../interfaces/admin';
@@ -21,6 +21,21 @@ export class KnexHelper {
 
   static async insertMetadata(metadata: InsertionMetadata): Promise<boolean> {
     await knex(dbTables.nftItems).insert(metadata);
+    return true;
+  }
+
+  static async bulkInsertMetadata(metadataList: InsertionMetadata[]): Promise<boolean> {
+    // Save each item insert query string in this array.
+    const queries = [];
+    for(const metadata of metadataList) {
+      const query = knex(dbTables.nftItems).insert(metadata)
+        .onConflict(['contract_address', 'token_hash'])
+        .merge()
+        .returning(['contract_address', 'token_hash']).toQuery();
+      queries.push(query);
+    }
+    // Call the DB once.
+    await knex.raw(queries.join(';'));
     return true;
   }
 
@@ -136,7 +151,7 @@ export class KnexHelper {
   /*
   * NFT Collections CRUD
   * */
-  static async insertNftCollection(collection: NftCollection): Promise<boolean> {
+  static async insertNftCollection(collection: NftCollectionDbReq): Promise<boolean> {
     await knex(dbTables.nftCollections).insert(collection);
     return true;
   }

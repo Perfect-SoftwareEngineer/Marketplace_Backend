@@ -16,10 +16,17 @@ class MetaClass implements Metadata {
   token_format: string;
   chain: string;
   meta_3d_url: string;
+  contract_address: string;
 
-  constructor(attributes: any, description: string, name: string, animation_url: string, background_color:
-    string, external_url: string, image: string, image_data: string, youtube_url: string, owner_address: string,
-  nft_type: string, token_format: string, chain: string, meta_3d_url: string) {
+  token_hash: string;
+  token_id: string;
+  token_uri: string;
+  amount: string;
+
+  constructor(attributes: any, description: string, name: string, animation_url: string, background_color: string,
+              external_url: string, image: string, image_data: string, youtube_url: string, owner_address: string,
+              nft_type: string, token_format: string, chain: string, meta_3d_url: string, contract_address: string,
+              token_hash: string, token_id: string, token_uri: string, amount: string) {
     this.attributes = attributes;
     this.description = description;
     this.name = name;
@@ -34,16 +41,20 @@ class MetaClass implements Metadata {
     this.token_format = token_format;
     this.chain = chain;
     this.meta_3d_url = meta_3d_url;
+    this.contract_address = contract_address;
+    this.token_hash = token_hash;
+    this.token_id = token_id ;
+    this.token_uri = token_uri ;
+    this.amount = amount ;
   }
 }
-export async function sanitizeAddMetadataBody(req: Request, res: Response, next: NextFunction) {
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+export async function sanitizeAddMetadataBody(req: Request, res: Response, next: NextFunction) {
   // @ts-ignore
   // Using this to filter out fields that are not in our table schema
   const metadataKeys = Object.keys(new MetaClass());
-  for(const key of Object.keys(req.body)) {
-    if(!metadataKeys.includes(key)) {
+  for (const key of Object.keys(req.body)) {
+    if (!metadataKeys.includes(key)) {
       delete req.body[key];
     }
   }

@@ -443,12 +443,14 @@ components:
           type: string
         name:
           type: string
-        contract_address:
-          type: string
+        contract_addresses:
+          type: array
+          items:
+            type: string
       example:
         id: luna_game_3d
         name: Luna Game 3d
-        contract_address: contractAddress
+        contract_addresses: ['contractAddress0']
 
     CollectionInfo:
       type: object
@@ -457,8 +459,10 @@ components:
           type: string
         name:
           type: string
-        contract_address:
-          type: string
+        contract_addresses:
+          type: array
+          items:
+            type: string
         created_at:
           type: string
         updated_at:
@@ -466,7 +470,7 @@ components:
       example:
         id: luna_game_3d
         name: Luna Game 3d
-        contract_address: contractAddress
+        contract_addresses: ['contractAddress0', 'contractAddress1']
         created_at: '2022-03-31T22:44:12.760Z'
         updated_at: '2022-03-31T22:44:12.760Z'
 
@@ -517,12 +521,13 @@ components:
       properties:
         name:
           type: string
-        contract_address:
-          type: string
+        contract_addresses:
+          type: array
+          items:
+            type: string
       example:
         name: Luna Game 3d
-        contract_address: contractAddress
-
+        contract_addresses: ['contractAddress0']
     NftType:
       type: string
       enum:
@@ -585,13 +590,15 @@ components:
           type: string
         meta_3d_url:
           type: string
+        contract_address:
+          type: string
       example:
         description: Friendly OpenSea Creature that enjoys long swims in the ocean.
         external_url: https://openseacreatures.io/3
+        chain: polygon
         image: >-
           https://storage.googleapis.com/opensea-prod.appspot.com/puffs/3.png
         name: Dave Starbelly
-        namer: Dave Starbelly
         background_color: abc
         nft_type: AVATAR
         token_format: ERC721
@@ -620,6 +627,7 @@ components:
         animation_url: https://openseacreatures.io/3
         youtube_url: https://www.youtube.com/watch?v=qt1equGhkQE
         meta_3d_url: https://www.youtube.com/watch?v=qt1equGhkQE
+        contract_address: contractAddress0
 
     NftItem:
       type: object

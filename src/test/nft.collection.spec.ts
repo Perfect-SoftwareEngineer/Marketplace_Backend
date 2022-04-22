@@ -16,8 +16,8 @@ const collectionData = {
 const collectionRequestBody = {
   id: collectionId,
   name: 'Luna Game 3d',
-  contractAddress: 'contractAddress',
-};
+  contractAddresses: ['contractAddress'],
+}
 
 describe('Add Collection', () => {
 
@@ -72,10 +72,11 @@ describe('Update a collection', () => {
   });
 
   it('should collection details', async () => {
+    // @ts-ignore
     const res = await collectionService.updateCollectionInfo({
       id: collectionId,
       name: 'New Name',
-    });
+    } );
     expect(res).toEqual(true);
   });
 

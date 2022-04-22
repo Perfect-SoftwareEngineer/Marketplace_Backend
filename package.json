@@ -57,6 +57,7 @@
     "knex": "1.0.3",
     "log4js": "6.4.2",
     "method-override": "3.0.0",
+    "moralis": "^1.5.9",
     "pg": "8.7.3",
     "sinon": "13.0.1",
     "swagger-jsdoc": "6.2.0",

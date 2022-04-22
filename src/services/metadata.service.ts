@@ -4,10 +4,10 @@ import { Logger } from '../helpers/Logger';
 import { GetItemRequest } from '../interfaces/get.item.request';
 import {
   AddMetadataRequest,
-  Attribute,
+  Attribute, BatchAddMetadataRequest,
   FetchTokenFilter,
-  FetchTokenRequest, FetchTokenResponse,
-  NftItem,
+  FetchTokenRequest, FetchTokenResponse, InsertionMetadata,
+  Metadata, NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
 import { KnexHelper } from '../helpers/knex.helper';
@@ -36,9 +36,25 @@ export async function addItem(request: AddMetadataRequest): Promise<string> {
   await KnexHelper.insertMetadata({
     ...request.metadata,
     token_id: request.tokenId,
-    collection_id: request.collectionId
+    collection_id: request.collectionId,
+    token_hash: request.metadata.token_hash || request.tokenId,
   });
   return request.tokenId;
+}
+
+export async function batchAddItems(request: BatchAddMetadataRequest): Promise<string> {
+  Logger.Info(`Adding multiple token metadata for collection ${request.collectionId}`);
+  const listToSave: InsertionMetadata[] = [];
+  request.metadataList.forEach(metadata => {
+    listToSave.push({
+      ...metadata,
+      collection_id: request.collectionId,
+      token_hash: metadata.token_hash || metadata.token_id,
+    });
+  });
+  const result = await KnexHelper.bulkInsertMetadata(listToSave);
+  Logger.Info(result);
+  return request.collectionId;
 }
 
 export async function getSingleItem(request: GetItemRequest): Promise<NftItem> {

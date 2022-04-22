@@ -32,7 +32,7 @@ describe('Add NFTs', () => {
   });
 
   it('should add a token', async () => {
-    const res = await metadataService.addItem({ collectionId, tokenId, metadata: createRequestBody });
+    const res = await metadataService.addItem({ collectionId, tokenId, metadata: { token_id: tokenId, ...createRequestBody } });
     expect(res).toEqual('1');
   });
 });

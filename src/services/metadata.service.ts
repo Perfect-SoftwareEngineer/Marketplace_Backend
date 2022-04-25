@@ -7,7 +7,7 @@ import {
   Attribute,
   FetchTokenFilter,
   FetchTokenRequest, FetchTokenResponse,
-  Metadata, NftItem,
+  NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
 import { KnexHelper } from '../helpers/knex.helper';

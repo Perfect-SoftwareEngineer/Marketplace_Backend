@@ -3,7 +3,7 @@ import { SignatureVerifier } from '../helpers/signature.verifier';
 import { CustomError } from '../helpers';
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../interfaces/user';
-import { AuthResponse, GenerateAuthRequest, JwtData, RoleType } from '../interfaces/jwt.config';
+import { AuthResponse, GenerateAuthRequest, RoleType } from '../interfaces/jwt.config';
 import { Admin } from '../interfaces/admin';
 import * as adminService from '../services/admin.service';
 import * as userService from '../services/user.service';
@@ -28,9 +28,9 @@ export async function generateAuthToken(request: GenerateAuthRequest): Promise<A
 
   // Update Nonce
   if (roleType === RoleType.ADMIN) {
-    await KnexHelper.updateAdmin(publicAddress, { nonce: Math.floor(Math.random() * 1000000) })
+    await KnexHelper.updateAdmin(publicAddress, { nonce: Math.floor(Math.random() * 1000000) });
   } else {
-    await KnexHelper.updateUser(publicAddress, { nonce: Math.floor(Math.random() * 1000000) })
+    await KnexHelper.updateUser(publicAddress, { nonce: Math.floor(Math.random() * 1000000) });
   }
   return { token, user };
 

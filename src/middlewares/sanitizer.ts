@@ -19,7 +19,7 @@ class MetaClass implements Metadata {
 
   constructor(attributes: any, description: string, name: string, animation_url: string, background_color:
     string, external_url: string, image: string, image_data: string, youtube_url: string, owner_address: string,
-              nft_type: string, token_format: string, chain: string, meta_3d_url: string) {
+  nft_type: string, token_format: string, chain: string, meta_3d_url: string) {
     this.attributes = attributes;
     this.description = description;
     this.name = name;
@@ -37,6 +37,8 @@ class MetaClass implements Metadata {
   }
 }
 export async function sanitizeAddMetadataBody(req: Request, res: Response, next: NextFunction) {
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   // Using this to filter out fields that are not in our table schema
   const metadataKeys = Object.keys(new MetaClass());

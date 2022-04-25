@@ -3,7 +3,7 @@ import { User } from './user';
 
 export interface JwtConfig {
   publicKey: string;
-  handleJsonResponse?: Function;
+  handleJsonResponse?: ( code: number, message: string) => void;
 }
 
 export enum RoleType {

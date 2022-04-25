@@ -1,5 +1,4 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
 
 import { routeError } from '../handlers';
 

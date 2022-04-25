@@ -15,7 +15,7 @@ import { GetUserRequest, SaveUserRequest, UpdateDbUserRequest, User } from '../i
 import { Admin, GetAdminRequest, SaveAdminRequest, UpdateDbAdminRequest } from '../interfaces/admin';
 import { Pagination } from '../interfaces/pagination';
 
-const knex = require('../../data/db');
+import knex from '../../data/db';
 
 export class KnexHelper {
 
@@ -54,10 +54,10 @@ export class KnexHelper {
     for (let i = 0; i < attributes.length; i++) {
       const attr = attributes[i];
       if (!attr.trait_type) {
-        queryStrings.push(`obj.val->>'value' = ?`);
+        queryStrings.push('obj.val->>\'value\' = ?');
         values.push(attr.value);
       } else {
-        queryStrings.push(`obj.val->>'trait_type' = ? AND obj.val->>'value' = ?`);
+        queryStrings.push('obj.val->>\'trait_type\' = ? AND obj.val->>\'value\' = ?');
         values.push(...[attr.trait_type, attr.value]);
       }
       rawQuery += queryStrings.join(' AND ');
@@ -126,9 +126,8 @@ export class KnexHelper {
 
   static async deleteMetadata(body: GetItemRequest): Promise<number> {
     // Deletes entire collection unless tokenId is specified.
-    const condition = { collection_id: body.collectionId };
+    const condition: { collection_id: string, token_id?: string } = { collection_id: body.collectionId };
     if (body.tokenId) {
-      // @ts-ignore
       condition.token_id = body.tokenId;
     }
     return knex(dbTables.nftItems).where(condition).del();
@@ -190,7 +189,7 @@ export class KnexHelper {
     if (!body.nonce) {
       body.nonce = Math.floor(Math.random() * 1000000);
     }
-    const result = await knex(dbTables.users)
+    await knex(dbTables.users)
       .where({ public_address })
       .update(body);
     return true;
@@ -214,7 +213,7 @@ export class KnexHelper {
     if (!body.nonce) {
       body.nonce = Math.floor(Math.random() * 1000000);
     }
-    const result = await knex(dbTables.admins)
+    await knex(dbTables.admins)
       .where({ public_address })
       .update(body);
     return true;

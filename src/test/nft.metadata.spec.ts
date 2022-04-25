@@ -62,6 +62,7 @@ describe('Update an NFT', () => {
   });
 
   it('should update token details', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const res = await metadataService.updateItem({ collectionId, tokenId, metadata: updateRequestBody });
     expect(res).toEqual(true);
@@ -77,7 +78,6 @@ describe('Delete an NFT', () => {
   });
 
   it('should delete token', async () => {
-    // @ts-ignore
     const res = await metadataService.deleteItem({ collectionId, tokenId });
     expect(res).toEqual(1);
   });
@@ -85,7 +85,7 @@ describe('Delete an NFT', () => {
   it('should throw not found error', async () => {
     KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([]);
     try {
-      const res = await metadataService.deleteItem({ collectionId, tokenId });
+      await metadataService.deleteItem({ collectionId, tokenId });
     } catch (e) {
       expect(e).toBeInstanceOf(CustomError);
       expect((e as CustomError).code).toEqual(StatusCodes.NOT_FOUND);

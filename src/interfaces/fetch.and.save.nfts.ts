@@ -1,4 +1,3 @@
-
 export interface FetchAndSaveNftRequest {
   collectionName: string;
   collectionId: string;
@@ -8,4 +7,15 @@ export interface FetchAndSaveNftRequest {
 interface FetchNftContract {
   address: string;
   chain: string;
+}
+
+interface FetchNftContract {
+  address: string;
+  chain: string;
+}
+
+export interface Update3dNftItem {
+  contractAddress: string;
+  tokenHash: string;
+  meta3dUrl: string;
 }

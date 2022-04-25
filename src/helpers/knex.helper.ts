@@ -14,6 +14,7 @@ import { TokenExistsError } from '../interfaces';
 import { GetUserRequest, SaveUserRequest, UpdateDbUserRequest, User } from '../interfaces/user';
 import { Admin, GetAdminRequest, SaveAdminRequest, UpdateDbAdminRequest } from '../interfaces/admin';
 import { Pagination } from '../interfaces/pagination';
+import { Update3dNftItem } from '../interfaces/fetch.and.save.nfts';
 
 import knex from '../../data/db';
 
@@ -27,7 +28,7 @@ export class KnexHelper {
   static async bulkInsertMetadata(metadataList: InsertionMetadata[]): Promise<boolean> {
     // Save each item insert query string in this array.
     const queries = [];
-    for(const metadata of metadataList) {
+    for (const metadata of metadataList) {
       const query = knex(dbTables.nftItems).insert(metadata)
         .onConflict(['contract_address', 'token_hash'])
         .merge()
@@ -232,5 +233,20 @@ export class KnexHelper {
       .where({ public_address })
       .update(body);
     return true;
+  }
+
+
+  static async updateTokens3dUrl(metaItems: Update3dNftItem[]) {
+    // Save each item insert query string in this array.
+    const queries = [];
+    for (const metaItem of metaItems) {
+      const query = knex(dbTables.nftItems)
+        .where({ contract_address: metaItem.contractAddress, token_hash: metaItem.tokenHash })
+        .update({ 'meta_3d_url': metaItem.meta3dUrl })
+        .toQuery();
+      queries.push(query);
+    }
+    // Call the DB once.
+    return knex.raw(queries.join('; '));
   }
 }

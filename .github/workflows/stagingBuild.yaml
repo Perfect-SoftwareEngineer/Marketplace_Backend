@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Run build for both Node version 12 and version 14
-        node-version: [ 14.8.1 ]
+        # Run build for Node version 14
+        node-version: [ 14 ]
     steps:
       - uses: actions/checkout@v2
         with:

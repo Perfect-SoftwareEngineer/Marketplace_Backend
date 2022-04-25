@@ -1,6 +1,6 @@
 import { FetchAndSaveNftRequest } from '../interfaces/fetch.and.save.nfts';
 
-const playAndKollectRequest: FetchAndSaveNftRequest = {
+export const playAndKollectRequest: FetchAndSaveNftRequest = {
   collectionName: 'CyberKongz: Play & Kollect',
   collectionId: 'playandkollect',
   contracts: [
@@ -24,7 +24,7 @@ const playAndKollectRequest: FetchAndSaveNftRequest = {
 // fetchAndSaveNftByContract(playAndKollectRequest)
 
 
-const updateSample = [
+export const updateSample = [
   {
     contractAddress: '0x0e28a33728b61a8abe11ac9adc0af17c0d3d7603',
     tokenHash: '88e280de44609c5f2b5badb6a6b61088',

@@ -17,7 +17,7 @@ const collectionRequestBody = {
   id: collectionId,
   name: 'Luna Game 3d',
   contractAddresses: ['contractAddress'],
-}
+};
 
 describe('Add Collection', () => {
 

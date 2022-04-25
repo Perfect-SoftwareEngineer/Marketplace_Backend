@@ -6,14 +6,14 @@ import { Logger } from '../helpers/Logger';
 import { FetchAndSaveNftRequest, Update3dNftItem } from '../interfaces/fetch.and.save.nfts';
 import { KnexHelper } from '../helpers/knex.helper';
 
-const Moralis = require("moralis/node");
+const Moralis = require('moralis/node');
 
 /* Moralis init code */
 const serverUrl = process.env.MORALIS_SERVER_URL;
 const appId = process.env.MORALIS_APP_ID;
 
 
-export function formulateMetadata(nft: components["schemas"]["nft"], chain: string) {
+export function formulateMetadata(nft: components['schemas']['nft'], chain: string) {
   if (!nft.metadata) {
     return;
   }

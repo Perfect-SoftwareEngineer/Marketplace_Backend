@@ -4,10 +4,13 @@ import { Logger } from '../helpers/Logger';
 import { GetItemRequest } from '../interfaces/get.item.request';
 import {
   AddMetadataRequest,
-  Attribute, BatchAddMetadataRequest,
+  Attribute,
+  BatchAddMetadataRequest,
   FetchTokenFilter,
-  FetchTokenRequest, FetchTokenResponse, InsertionMetadata,
-  Metadata, NftItem,
+  FetchTokenRequest,
+  FetchTokenResponse,
+  InsertionMetadata,
+  NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
 import { KnexHelper } from '../helpers/knex.helper';

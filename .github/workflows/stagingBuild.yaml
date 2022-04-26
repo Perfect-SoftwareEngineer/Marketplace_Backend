@@ -24,17 +24,19 @@ jobs:
           node-version: ${{ matrix.node-version }}
       # install dependencies
       - run: npm ci
-      - run: npm run build
       - run: npm run test
       - run: npm run lint
 
-      - uses: actions/checkout@v2
+      # Upload to EC2
       - name: Deploy in EC2
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
           HOSTNAME: ${{ secrets.HOSTNAME }}
           USER_NAME: ${{ secrets.USER_NAME }}
         run: |
+          npm ci
+          npm i -g pm2@latest typescript
+          npm run build
           echo "-----BEGIN RSA PRIVATE KEY-----" >> private_key.pem
           echo "$PRIVATE_KEY" >> private_key.pem
           echo "-----END RSA PRIVATE KEY-----" >> private_key.pem
@@ -53,7 +55,6 @@ jobs:
             tar -xzf /home/ubuntu/marketplace-staging-temp/build.tar.gz -C /home/ubuntu/marketplace-staging-temp
             chmod +x /home/ubuntu/marketplace-staging-temp/staging_run_script.sh
             cd /home/ubuntu/
-            pm2 stop marketplace_app
             rm -r marketplace-staging
             mv marketplace-staging-temp marketplace-staging
             cd marketplace-staging/

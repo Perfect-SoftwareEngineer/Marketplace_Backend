@@ -19,13 +19,13 @@ function respond(res: Response, data: any, httpCode: number): void {
   res.end(JSON.stringify(response));
 }
 
-export function success(res: Response, response: any, status: number = 200): void {
+export function success(res: Response, response: any, status = 200): void {
   const data = response;
   data.error = false;
   respond(res, data, status);
 }
 
-export function failure(res: Response, response: any, httpCode: number = 503): void {
+export function failure(res: Response, response: any, httpCode = 503): void {
   const data = response;
   data.error = true;
   respond(res, data, httpCode);

@@ -11,9 +11,9 @@ const adminData = {
   id: 1,
   public_address: publicAddress,
   username: 'lekky',
-}
+};
 
-const adminRequestBody = { public_address: publicAddress }
+const adminRequestBody = { public_address: publicAddress };
 
 describe('Add Admin', () => {
 
@@ -61,6 +61,7 @@ describe('Update an Admin', () => {
   });
 
   it('should update admin', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const res = await adminService.updateAdmin(publicAddress, {
       username: 'Hashcode',

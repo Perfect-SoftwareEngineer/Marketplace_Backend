@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 
 import { JwtConfig, JwtData, RoleType } from '../interfaces/jwt.config';
 import { IExpressRequest } from '../interfaces/i.express.request';
@@ -20,7 +20,7 @@ const USER_TOKEN_EXPIRY_IN_SECONDS = 1814400; // 21 days
 
 export class JwtHelper {
   private configOption: JwtConfig;
-  handleJsonResponse?: Function;
+  handleJsonResponse?: ( code: number, message: string) => void;
 
   constructor(configOption: JwtConfig) {
     this.configOption = configOption;
@@ -31,7 +31,7 @@ export class JwtHelper {
     if (this.handleJsonResponse) {
       return this.handleJsonResponse(code, message);
     }
-    res.status(403).json({ error: true, message })
+    res.status(403).json({ error: true, message });
   }
 
   async generateToken(params: JwtData, expiryInSeconds=USER_TOKEN_EXPIRY_IN_SECONDS) {
@@ -71,14 +71,14 @@ export class JwtHelper {
    * @param roleType - role that is authorized to call the endpoint.
    * We can later extend this for Admin permissions
    */
-  requirePermission(roleType: RoleType): (req: IExpressRequest, res: Response, next: Function) => Promise<any> {
-    return async (req: IExpressRequest, res: Response, next: Function) => {
+  requirePermission(roleType: RoleType) {
+    return async (req: IExpressRequest, res: Response, next: NextFunction) => {
       const token = req.headers['x-auth-token'];
       if (!token) {
         return this.respondError(res, 403, 'No API token');
       }
       try {
-        if (typeof token !== "string") {
+        if (typeof token !== 'string') {
           return this.respondError(res, 403, 'Invalid token');
         }
 

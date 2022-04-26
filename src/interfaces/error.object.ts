@@ -7,12 +7,12 @@ export interface ErrorObject extends Error {
 
 export class TokenExistsError extends Error {
   constructor() {
-    super("Cannot delete collection from db, still has tokens in the db");
+    super('Cannot delete collection from db, still has tokens in the db');
   }
 }
 
 export class InvalidSignatureError extends Error {
   constructor() {
-    super("Invalid signature");
+    super('Invalid signature');
   }
 }

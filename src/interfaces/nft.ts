@@ -34,7 +34,7 @@ export enum DisplayType {
 }
 
 export interface UpdateMetadataRequest {
-  collectionId: string;
+  contractAddress: string;
   tokenId: string;
   metadata: Metadata;
 }

@@ -33,6 +33,10 @@ export function formulateMetadata(nft: components['schemas']['nft'], chain: stri
   };
 }
 
+/**
+ * @Function fetchAndSaveNftByContract can be used later to save a collection in the db and
+ * fetch its NFT item metadata and then save them in the DB.
+ */
 export async function fetchAndSaveNftByContract(request: FetchAndSaveNftRequest) {
   const { collectionId, collectionName, contracts } = request;
   const nfts = [];
@@ -75,7 +79,13 @@ export async function fetchAndSaveNftByContract(request: FetchAndSaveNftRequest)
   await MetadataService.batchAddItems({ collectionId, metadataList: nfts });
 }
 
-
+/**
+ * @Function updateTokens3dUrl helps us update the 3d url for tokens
+ * @param metaItems: each item containing the:
+ *   contractAddress: string;
+ *   tokenId: string;
+ *   meta3dUrl: string;
+ */
 export async function updateTokens3dUrl(metaItems: Update3dNftItem[]) {
   const result = await KnexHelper.updateTokens3dUrl(metaItems);
   console.log(result);

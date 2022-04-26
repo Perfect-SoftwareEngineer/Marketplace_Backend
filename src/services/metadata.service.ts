@@ -24,7 +24,7 @@ export async function addItem(request: AddMetadataRequest): Promise<string> {
 
   // Check if token is already saved in the DB.
   const result = await KnexHelper.getSingleMetadata({
-    collectionId: request.collectionId,
+    contractAddress: request.metadata.contract_address,
     tokenId: request.tokenId,
   });
 
@@ -122,7 +122,7 @@ export async function getAllItems(req: Request): Promise<FetchTokenResponse> {
 
 export async function updateItem(request: UpdateMetadataRequest): Promise<boolean> {
   Logger.Info('Running update process', request);
-  await getSingleItem({ collectionId: request.collectionId, tokenId: request.tokenId });
+  await getSingleItem({ contractAddress: request.contractAddress, tokenId: request.tokenId });
   const response = await KnexHelper.updateMetadata(request);
   Logger.Info(response);
   return true;

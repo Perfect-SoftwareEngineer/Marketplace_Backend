@@ -16,6 +16,6 @@ interface FetchNftContract {
 
 export interface Update3dNftItem {
   contractAddress: string;
-  tokenHash: string;
+  tokenId: string;
   meta3dUrl: string;
 }

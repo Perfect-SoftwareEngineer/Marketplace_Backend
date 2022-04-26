@@ -106,9 +106,9 @@ paths:
                 code: 404
                 message: Collection was not found
 
-  /nft/{collection_id}/metadata/{token_id}:
+  /nft/{contract_address}/metadata/{token_id}:
     parameters:
-      - name: collection_id
+      - name: contract_address
         in: path
         schema:
           type: string
@@ -212,13 +212,13 @@ paths:
                 error: true
                 code: 404
                 message: Token metadata was not found
-  /nft/{collection_id}/metadata:
+  /nft/{contract_address}/metadata:
     get:
       tags:
         - nft
       summary: Get All Metadata
       parameters:
-        - name: collection_id
+        - name: contract_address
           in: path
           schema:
             type: string
@@ -560,6 +560,13 @@ components:
 
     AddTokenRequest:
       type: object
+      required:
+        - description
+        - name
+        - attributes
+        - chain
+        - contract_address
+        - token_id
       properties:
         description:
           type: string
@@ -591,6 +598,12 @@ components:
         meta_3d_url:
           type: string
         contract_address:
+          type: string
+        token_hash:
+          type: string
+        token_uri:
+          type: string
+        amount:
           type: string
       example:
         description: Friendly OpenSea Creature that enjoys long swims in the ocean.
@@ -628,10 +641,15 @@ components:
         youtube_url: https://www.youtube.com/watch?v=qt1equGhkQE
         meta_3d_url: https://www.youtube.com/watch?v=qt1equGhkQE
         contract_address: contractAddress0
+        token_hash: dfwefqeef0ef
+        token_uri: https://openseacreatures.io/3
+        amount: '300'
 
     NftItem:
       type: object
       properties:
+        id:
+          type: number
         collection_id:
           type: string
         chain:
@@ -666,6 +684,14 @@ components:
           type: string
         meta_3d_url:
           type: string
+        contract_address:
+          type: string
+        token_hash:
+          type: string
+        token_uri:
+          type: string
+        amount:
+          type: string
 
     AddTokenResponse:
       allOf:
@@ -675,7 +701,7 @@ components:
             data:
               type: object
               example:
-                collection_id: '043'
+                token_id: '043'
               properties:
                 token_id:
                   type: string

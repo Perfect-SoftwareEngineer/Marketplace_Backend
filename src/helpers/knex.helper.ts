@@ -32,21 +32,14 @@ export class KnexHelper {
     const queries = [];
     for (const metadata of metadataList) {
       const query = knex(dbTables.nftItems).insert(metadata)
-        .onConflict(['contract_address', 'token_hash'])
+        .onConflict(['contract_address', 'token_id'])
         .merge()
-        .returning(['contract_address', 'token_hash']).toQuery();
+        .returning(['contract_address', 'token_id']).toQuery();
       queries.push(query);
     }
     // Call the DB once.
     await knex.raw(queries.join(';'));
     return true;
-  }
-
-  static async getLastTokenIdForCollection(collectionId: string): Promise<number> {
-    const result = (await knex(dbTables.nftItems).select().where({ collection_id: collectionId })
-      .orderBy('token_id', 'desc').limit(1))[0]?.token_id || 0;
-    Logger.Info(result);
-    return result;
   }
 
   static async getAllMetadata(collectionId: string): Promise<Metadata[]> {
@@ -122,7 +115,7 @@ export class KnexHelper {
 
   static async getSingleMetadata(body: GetItemRequest): Promise<NftItem[]> {
     const result = await knex(dbTables.nftItems).select().where({
-      collection_id: body.collectionId,
+      contract_address: body.contractAddress,
       token_id: body.tokenId
     }).limit(1);
     result.forEach((item: any) => {
@@ -136,7 +129,7 @@ export class KnexHelper {
   static async updateMetadata(body: UpdateMetadataRequest): Promise<boolean> {
     Logger.Info(body);
     const result = await knex(dbTables.nftItems)
-      .where({ collection_id: body.collectionId, token_id: body.tokenId })
+      .where({ contract_address: body.contractAddress, token_id: body.tokenId })
       .update(body.metadata);
     Logger.Info(result);
     return true;
@@ -144,7 +137,7 @@ export class KnexHelper {
 
   static async deleteMetadata(body: GetItemRequest): Promise<number> {
     // Deletes entire collection unless tokenId is specified.
-    const condition: { collection_id: string, token_id?: string } = { collection_id: body.collectionId };
+    const condition: { contract_address: string, token_id?: string } = { contract_address: body.contractAddress };
     if (body.tokenId) {
       condition.token_id = body.tokenId;
     }
@@ -243,7 +236,7 @@ export class KnexHelper {
     const queries = [];
     for (const metaItem of metaItems) {
       const query = knex(dbTables.nftItems)
-        .where({ contract_address: metaItem.contractAddress, token_hash: metaItem.tokenHash })
+        .where({ contract_address: metaItem.contractAddress, token_id: metaItem.tokenId })
         .update({ 'meta_3d_url': metaItem.meta3dUrl })
         .toQuery();
       queries.push(query);

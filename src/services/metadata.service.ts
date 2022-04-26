@@ -40,7 +40,7 @@ export async function addItem(request: AddMetadataRequest): Promise<string> {
     ...request.metadata,
     token_id: request.tokenId,
     collection_id: request.collectionId,
-    token_hash: request.metadata.token_hash || request.tokenId,
+    token_hash: request.metadata.token_hash,
   });
   return request.tokenId;
 }
@@ -52,7 +52,7 @@ export async function batchAddItems(request: BatchAddMetadataRequest): Promise<s
     listToSave.push({
       ...metadata,
       collection_id: request.collectionId,
-      token_hash: metadata.token_hash || metadata.token_id,
+      token_hash: metadata.token_hash,
     });
   });
   const result = await KnexHelper.bulkInsertMetadata(listToSave);

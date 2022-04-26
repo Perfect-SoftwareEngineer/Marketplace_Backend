@@ -1,9 +1,11 @@
 import {
   Attribute,
   AttrQueryForm,
-  FetchTokenRequest, FetchTokenResponse,
+  FetchTokenRequest,
+  FetchTokenResponse,
   InsertionMetadata,
-  Metadata, NftItem,
+  Metadata,
+  NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
 import { Logger } from './Logger';

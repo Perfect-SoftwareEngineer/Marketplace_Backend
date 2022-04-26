@@ -53,7 +53,7 @@ export interface BatchAddMetadataRequest {
 export interface InsertionMetadata extends Metadata {
   collection_id: string;
   token_id: string;
-  token_hash: string;
+  token_hash?: string;
 }
 
 export interface FetchTokenFilter {

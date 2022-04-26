@@ -23,7 +23,7 @@ export async function handleAddMetadata(req: Request, res: ExpressResponse): Pro
       }
     }, StatusCodes.OK);
   } catch (err: any) {
-    if(err.code === '23503') {
+    if (err.code === '23503') {
       return Response.failure(res, {
         code: 'COLLECTION_NOT_FOUND',
         message: `Collection with id ${collectionId} not created yet.`,
@@ -50,8 +50,8 @@ export async function handleGetAllMetadata(req: Request, res: ExpressResponse): 
 export async function handleGetMetadata(req: Request, res: ExpressResponse): Promise<void> {
   Logger.Info(req.params);
   try {
-    const { collection_id: collectionId, token_id: tokenId } = req.params;
-    const response = await metadataService.getSingleItem({ collectionId, tokenId });
+    const { collection_id: contractAddress, token_id: tokenId } = req.params;
+    const response = await metadataService.getSingleItem({ contractAddress, tokenId });
 
     return Response.success(res, {
       message: 'Successful',
@@ -65,8 +65,8 @@ export async function handleGetMetadata(req: Request, res: ExpressResponse): Pro
 export async function handleUpdateMetadata(req: Request, res: ExpressResponse): Promise<void> {
   Logger.Info(req.params);
   try {
-    const { collectionId, tokenId } = req.params;
-    await metadataService.updateItem({ collectionId, tokenId, metadata: req.body });
+    const { contractAddress, tokenId } = req.params;
+    await metadataService.updateItem({ contractAddress, tokenId, metadata: req.body });
 
     return Response.success(res, {
       message: 'Successful',
@@ -82,8 +82,8 @@ export async function handleUpdateMetadata(req: Request, res: ExpressResponse): 
 export async function handleDeleteMetadata(req: Request, res: ExpressResponse): Promise<void> {
   Logger.Info(req.params);
   try {
-    const { collectionId, tokenId } = req.params;
-    const response = await metadataService.deleteItem({ collectionId, tokenId });
+    const { contractAddress, tokenId } = req.params;
+    const response = await metadataService.deleteItem({ contractAddress, tokenId });
 
     return Response.success(res, {
       message: 'Successful',

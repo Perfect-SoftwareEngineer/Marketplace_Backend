@@ -12,6 +12,7 @@ import app from '../app';
 
 
 const collectionId = 'luna_game_3d';
+const contractAddress = 'contractAddress0';
 const tokenId = '1';
 
 const fetchTokenRequest: FetchTokenRequest = {
@@ -24,10 +25,11 @@ const fetchTokenRequest: FetchTokenRequest = {
 describe('Add NFTs', () => {
 
   beforeEach(() => {
-    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([]);
+    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns([]);
     KnexHelper.insertMetadata = sinon.stub().withArgs({
       collection_id: collectionId,
-      token_id: tokenId, ...createRequestBody
+      token_id: tokenId,
+      ...createRequestBody,
     }).returns(true);
   });
 
@@ -40,11 +42,11 @@ describe('Add NFTs', () => {
 describe('Get NFTs', () => {
 
   beforeEach(() => {
-    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([createRequestBody]);
+    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns([createRequestBody]);
   });
 
   it('should return a token', async () => {
-    const res = await metadataService.getSingleItem({ collectionId, tokenId });
+    const res = await metadataService.getSingleItem({ contractAddress, tokenId });
     expect(res).toEqual(createRequestBody);
   });
 
@@ -53,7 +55,7 @@ describe('Get NFTs', () => {
 describe('Update an NFT', () => {
 
   beforeEach(() => {
-    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([createRequestBody]);
+    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns([createRequestBody]);
     KnexHelper.updateMetadata = sinon.stub().withArgs({
       collectionId,
       tokenId,
@@ -64,7 +66,7 @@ describe('Update an NFT', () => {
   it('should update token details', async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const res = await metadataService.updateItem({ collectionId, tokenId, metadata: updateRequestBody });
+    const res = await metadataService.updateItem({ contractAddress, tokenId, metadata: updateRequestBody });
     expect(res).toEqual(true);
   });
 
@@ -73,19 +75,19 @@ describe('Update an NFT', () => {
 describe('Delete an NFT', () => {
 
   beforeEach(() => {
-    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([createRequestBody]);
-    KnexHelper.deleteMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns(1);
+    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns([createRequestBody]);
+    KnexHelper.deleteMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns(1);
   });
 
   it('should delete token', async () => {
-    const res = await metadataService.deleteItem({ collectionId, tokenId });
+    const res = await metadataService.deleteItem({ contractAddress, tokenId });
     expect(res).toEqual(1);
   });
 
   it('should throw not found error', async () => {
-    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ collectionId, tokenId }).returns([]);
+    KnexHelper.getSingleMetadata = sinon.stub().withArgs({ contractAddress, tokenId }).returns([]);
     try {
-      await metadataService.deleteItem({ collectionId, tokenId });
+      await metadataService.deleteItem({ contractAddress, tokenId });
     } catch (e) {
       expect(e).toBeInstanceOf(CustomError);
       expect((e as CustomError).code).toEqual(StatusCodes.NOT_FOUND);

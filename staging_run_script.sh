@@ -15,12 +15,12 @@ do
 done < "$input"
 echo "$env_var_prefix"
 
-echo "NODE ENV is"
-echo $NODE_ENV
-npm install
-pm2 stop marketplace_app
-npm run migrate
-pm2 start ./src/bin/www/index.js --name marketplace_app --update-env --"$env_var_prefix"
+#echo "NODE ENV is"
+#echo $NODE_ENV
+#npm install
+#pm2 stop marketplace_app
+#npm run migrate
+pm2 start ./src/bin/www/index.js --name marketplace_app -- "$env_var_prefix" --update-env
 # The above will produce a command like:
 # pm2 start ./src/bin/www/index.js --name marketplace_app --update-env -- -NODE_ENV=$NODE_ENV -PORT=$PORT -DB_URL=$DB_URL -MORALIS_SERVER_URL=$MORALIS_SERVER_URL -MORALIS_APP_ID=$MORALIS_APP_ID
 # Basically adding the environment variable from the system to the pm2 instance.

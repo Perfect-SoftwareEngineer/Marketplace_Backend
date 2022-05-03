@@ -5,8 +5,11 @@ import { GetItemRequest } from '../interfaces/get.item.request';
 import {
   AddMetadataRequest,
   Attribute,
+  BatchAddMetadataRequest,
   FetchTokenFilter,
-  FetchTokenRequest, FetchTokenResponse,
+  FetchTokenRequest,
+  FetchTokenResponse,
+  InsertionMetadata,
   NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
@@ -21,7 +24,7 @@ export async function addItem(request: AddMetadataRequest): Promise<string> {
 
   // Check if token is already saved in the DB.
   const result = await KnexHelper.getSingleMetadata({
-    collectionId: request.collectionId,
+    contractAddress: request.metadata.contract_address,
     tokenId: request.tokenId,
   });
 
@@ -36,9 +39,25 @@ export async function addItem(request: AddMetadataRequest): Promise<string> {
   await KnexHelper.insertMetadata({
     ...request.metadata,
     token_id: request.tokenId,
-    collection_id: request.collectionId
+    collection_id: request.collectionId,
+    token_hash: request.metadata.token_hash,
   });
   return request.tokenId;
+}
+
+export async function batchAddItems(request: BatchAddMetadataRequest): Promise<string> {
+  Logger.Info(`Adding multiple token metadata for collection ${request.collectionId}`);
+  const listToSave: InsertionMetadata[] = [];
+  request.metadataList.forEach(metadata => {
+    listToSave.push({
+      ...metadata,
+      collection_id: request.collectionId,
+      token_hash: metadata.token_hash,
+    });
+  });
+  const result = await KnexHelper.bulkInsertMetadata(listToSave);
+  Logger.Info(result);
+  return request.collectionId;
 }
 
 export async function getSingleItem(request: GetItemRequest): Promise<NftItem> {
@@ -103,7 +122,7 @@ export async function getAllItems(req: Request): Promise<FetchTokenResponse> {
 
 export async function updateItem(request: UpdateMetadataRequest): Promise<boolean> {
   Logger.Info('Running update process', request);
-  await getSingleItem({ collectionId: request.collectionId, tokenId: request.tokenId });
+  await getSingleItem({ contractAddress: request.contractAddress, tokenId: request.tokenId });
   const response = await KnexHelper.updateMetadata(request);
   Logger.Info(response);
   return true;

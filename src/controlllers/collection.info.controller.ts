@@ -13,7 +13,7 @@ import { StatusCodes } from 'http-status-codes';
 export async function handleAddCollection(req: Request, res: ExpressResponse): Promise<void> {
   try {
     const { id, name, contract_address: contractAddress } = req.body;
-    await collectionService.addCollectionInfo({id, name, contractAddress });
+    await collectionService.addCollectionInfo({id, name, contractAddresses: contractAddress });
 
     return Response.success(res, {
       message: 'Successful',

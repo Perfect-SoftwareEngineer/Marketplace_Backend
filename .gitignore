@@ -24,3 +24,5 @@ tsconfig.tsbuildinfo
 test_staging_deploy.sh
 private_key.pem
 try.moralis.ts
+output.json
+try.moralis.ts

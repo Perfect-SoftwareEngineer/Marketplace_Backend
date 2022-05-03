@@ -7,7 +7,7 @@ const collectionId = 'luna_game_3d';
 const collectionData = {
   id: collectionId,
   name: 'Luna Game 3d',
-  contract_address: 'contractAddress',
+  contract_address: ['contractAddress0'],
 };
 
 exports.seed = async function (knex) {
@@ -23,6 +23,7 @@ exports.seed = async function (knex) {
     {
       collection_id: collectionId,
       token_id: '001',
+      contract_address: 'contractAddress0',
       ...testMetadata,
     }
   ]);

@@ -13,6 +13,11 @@ export interface Metadata {
   chain: string;
   token_format?: string;
   meta_3d_url?: string;
+  contract_address: string;
+  token_hash?: string;
+  token_id: string;
+  token_uri?: string;
+  amount?: string;
 }
 
 export interface Attribute {
@@ -29,7 +34,7 @@ export enum DisplayType {
 }
 
 export interface UpdateMetadataRequest {
-  collectionId: string;
+  contractAddress: string;
   tokenId: string;
   metadata: Metadata;
 }
@@ -40,9 +45,15 @@ export interface AddMetadataRequest {
   metadata: Metadata;
 }
 
+export interface BatchAddMetadataRequest {
+  collectionId: string;
+  metadataList: Metadata[];
+}
+
 export interface InsertionMetadata extends Metadata {
   collection_id: string;
   token_id: string;
+  token_hash?: string;
 }
 
 export interface FetchTokenFilter {
@@ -86,4 +97,8 @@ export interface NftItem {
   animation_url?: string;
   youtube_url?: string;
   meta_3d_url?: string;
+  contract_address: string;
+  token_hash?: string;
+  token_uri?: string;
+  amount?: string;
 }

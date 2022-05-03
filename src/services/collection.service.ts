@@ -9,7 +9,11 @@ export async function addCollectionInfo(request: NftCollection): Promise<boolean
   if (result.length !== 0) {
     throw new CustomError(StatusCodes.BAD_REQUEST, 'Collection already exists');
   }
-  return await KnexHelper.insertNftCollection(request);
+  return await KnexHelper.insertNftCollection({
+    id: request.id,
+    name: request.name,
+    contract_addresses: request.contractAddresses
+  });
 }
 
 export async function getAllCollectionInfo(): Promise<NftCollection[]> {

@@ -1,4 +1,4 @@
 export interface GetItemRequest {
-  collectionId: string;
+  contractAddress: string;
   tokenId?: string;
 }

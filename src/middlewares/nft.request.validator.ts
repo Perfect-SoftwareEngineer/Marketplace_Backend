@@ -55,6 +55,9 @@ export const addMetadataValidator = () => {
       .optional()
       .isURL()
       .bail(),
+    body('contract_address', 'contract_address is required')
+      .isLength({min: 42})
+      .bail(),
   ]);
 };
 

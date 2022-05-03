@@ -1,19 +1,22 @@
 import {
   Attribute,
   AttrQueryForm,
-  FetchTokenRequest, FetchTokenResponse,
+  FetchTokenRequest,
+  FetchTokenResponse,
   InsertionMetadata,
-  Metadata, NftItem,
+  Metadata,
+  NftItem,
   UpdateMetadataRequest
 } from '../interfaces/nft';
 import { Logger } from './Logger';
 import { GetItemRequest } from '../interfaces/get.item.request';
 import { dbTables } from '../constants';
-import { NftCollection, UpdateCollectionRequest } from '../interfaces/nft.collection';
+import { NftCollection, NftCollectionDbReq, UpdateCollectionRequest } from '../interfaces/nft.collection';
 import { TokenExistsError } from '../interfaces';
 import { GetUserRequest, SaveUserRequest, UpdateDbUserRequest, User } from '../interfaces/user';
 import { Admin, GetAdminRequest, SaveAdminRequest, UpdateDbAdminRequest } from '../interfaces/admin';
 import { Pagination } from '../interfaces/pagination';
+import { Update3dNftItem } from '../interfaces/fetch.and.save.nfts';
 
 import knex from '../../data/db';
 
@@ -24,11 +27,19 @@ export class KnexHelper {
     return true;
   }
 
-  static async getLastTokenIdForCollection(collectionId: string): Promise<number> {
-    const result = (await knex(dbTables.nftItems).select().where({ collection_id: collectionId })
-      .orderBy('token_id', 'desc').limit(1))[0]?.token_id || 0;
-    Logger.Info(result);
-    return result;
+  static async bulkInsertMetadata(metadataList: InsertionMetadata[]): Promise<boolean> {
+    // Save each item insert query string in this array.
+    const queries = [];
+    for (const metadata of metadataList) {
+      const query = knex(dbTables.nftItems).insert(metadata)
+        .onConflict(['contract_address', 'token_id'])
+        .merge()
+        .returning(['contract_address', 'token_id']).toQuery();
+      queries.push(query);
+    }
+    // Call the DB once.
+    await knex.raw(queries.join(';'));
+    return true;
   }
 
   static async getAllMetadata(collectionId: string): Promise<Metadata[]> {
@@ -104,7 +115,7 @@ export class KnexHelper {
 
   static async getSingleMetadata(body: GetItemRequest): Promise<NftItem[]> {
     const result = await knex(dbTables.nftItems).select().where({
-      collection_id: body.collectionId,
+      contract_address: body.contractAddress,
       token_id: body.tokenId
     }).limit(1);
     result.forEach((item: any) => {
@@ -118,7 +129,7 @@ export class KnexHelper {
   static async updateMetadata(body: UpdateMetadataRequest): Promise<boolean> {
     Logger.Info(body);
     const result = await knex(dbTables.nftItems)
-      .where({ collection_id: body.collectionId, token_id: body.tokenId })
+      .where({ contract_address: body.contractAddress, token_id: body.tokenId })
       .update(body.metadata);
     Logger.Info(result);
     return true;
@@ -126,7 +137,7 @@ export class KnexHelper {
 
   static async deleteMetadata(body: GetItemRequest): Promise<number> {
     // Deletes entire collection unless tokenId is specified.
-    const condition: { collection_id: string, token_id?: string } = { collection_id: body.collectionId };
+    const condition: { contract_address: string, token_id?: string } = { contract_address: body.contractAddress };
     if (body.tokenId) {
       condition.token_id = body.tokenId;
     }
@@ -136,7 +147,7 @@ export class KnexHelper {
   /*
   * NFT Collections CRUD
   * */
-  static async insertNftCollection(collection: NftCollection): Promise<boolean> {
+  static async insertNftCollection(collection: NftCollectionDbReq): Promise<boolean> {
     await knex(dbTables.nftCollections).insert(collection);
     return true;
   }
@@ -217,5 +228,20 @@ export class KnexHelper {
       .where({ public_address })
       .update(body);
     return true;
+  }
+
+
+  static async updateTokens3dUrl(metaItems: Update3dNftItem[]) {
+    // Save each item insert query string in this array.
+    const queries = [];
+    for (const metaItem of metaItems) {
+      const query = knex(dbTables.nftItems)
+        .where({ contract_address: metaItem.contractAddress, token_id: metaItem.tokenId })
+        .update({ 'meta_3d_url': metaItem.meta3dUrl })
+        .toQuery();
+      queries.push(query);
+    }
+    // Call the DB once.
+    return knex.raw(queries.join('; '));
   }
 }
